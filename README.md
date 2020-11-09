@@ -1,3 +1,5 @@
+**IMPORTANT:** The script must be run using a username `pi`.
+
 Run the next command to setup your Raspberry Pi for GoPiGo3.
 
 ```bash
