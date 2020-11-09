@@ -86,6 +86,7 @@ echo 'gpu_mem=128' >> /boot/config.txt
 
 # Instalamos el modulo python de la camara.
 export READTHEDOCS=True
+pip install wheel
 pip install picamera
 
 echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
