@@ -67,10 +67,10 @@ echo -e "\e[1;32mAplicaciones instaladas con éxito.\e[0m"
 echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
 
 # Instalamos la libreria GoPiGo.
-su -c "curl -kL dexterindustries.com/update_gopigo3 | bash" pi
+curl -kL dexterindustries.com/update_gopigo3 | bash
 
 # Instalamos los sensores.
-su -c "curl -kL dexterindustries.com/update_sensors | bash" pi
+curl -kL dexterindustries.com/update_sensors | bash
 
 echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
