@@ -106,12 +106,6 @@ pip install picamera
 echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
 
 
-echo "El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar..."
-while [ true ] ; do
-read -t 3 -n 1
-if [ $? = 0 ] ; then
+read -p "El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar..."
+
 reboot
-fi
-done
-
-
