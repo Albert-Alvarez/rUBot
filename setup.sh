@@ -33,50 +33,8 @@ apt-get update
 # Actualizamos cualquier paquete que pueda estar obsoleto.
 apt-get upgrade -y
 
-# Instalamos Vim para poder editar texto por terminal.
-# apt install vim -y
-
-# Instalamos git por si acaso...
-# apt install git -y
-
-# Instalamos tree (no se utilizara, pero lo pone en la documentacion...).
-apt install tree -y
-
-# Instalamos curl para poder hacer otras instalaciones.
-# apt install curl -y
-
-# La documentacion recomienda reinstalar openssh.
-# apt remove openssh-server -y
-# apt install openssh-server -y
-
-# Reiniciamos el servicio para asegurar que se apliquen los cambios.
-# systemctl enable ssh
-# servicer ssh restart
-
-# NO se instala VNC server. No queremos que explote la Raspberry, gracias.
-# NO configuramos el HDMI puesto que no se va a utilizar.
-# NO se instala Geany IDE puesto que se utilizara Visual Studio Code en remoto.
-
 echo -e "\e[1;32mAplicaciones instaladas con éxito.\e[0m"
 
-
-###################################################################################################
-# Instalamos drivers del robot.
-###################################################################################################
-
-echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
-
-# Creamos el usuario pi
-adduser --disabled-password --gecos "" pi
-usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
-
-# Instalamos la libreria GoPiGo.
-curl -kL dexterindustries.com/update_gopigo3 | sudo -u pi bash
-
-# Instalamos los sensores.
-curl -kL dexterindustries.com/update_sensors | sudo -u pi bash
-
-echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
 ###################################################################################################
 # Instalamos ROS Melodic
@@ -99,9 +57,31 @@ apt install python-rosdep python-rosinstall python-rosinstall-generator python-w
 apt install python-rosdep -y
 
 rosdep init
-rosdep update
+
+su - "$USER" -c "rosdep update"
 
 echo -e "\e[1;32mROS Melodic instalado con éxito.\e[0m"
+
+
+###################################################################################################
+# Instalamos drivers del robot.
+###################################################################################################
+
+echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
+
+# Creamos el usuario pi
+adduser --disabled-password --gecos "" pi
+echo pi:raspberry | chpasswd
+usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
+
+# Instalamos la libreria GoPiGo.
+curl -kL dexterindustries.com/update_gopigo3 | sudo -u pi bash
+
+# Instalamos los sensores.
+curl -kL dexterindustries.com/update_sensors | sudo -u pi bash
+
+echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
+
 
 ###################################################################################################
 # Configuracion de la camara.
@@ -109,18 +89,27 @@ echo -e "\e[1;32mROS Melodic instalado con éxito.\e[0m"
 
 echo -e "\e[1;33mInstalando la cámara...\e[0m"
 
+# Instalamos PiP.
+apt install python-pip -y
+
 # Habilitamos el acceso a la camara.
 echo 'start_x=1' >> /boot/config.txt
-echo 'gpu_mem=128' >> /boot/config.txt
+#echo 'gpu_mem=128' >> /boot/config.txt
 
 # Instalamos el modulo python de la camara.
-export READTHEDOCS=True
-pip install wheel
+#export READTHEDOCS=True
+#pip install wheel
 pip install picamera
 
 echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
 
 
-read -p 'El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar...'
-
+echo "El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar..."
+while [ true ] ; do
+read -t 3 -n 1
+if [ $? = 0 ] ; then
 reboot
+fi
+done
+
+
