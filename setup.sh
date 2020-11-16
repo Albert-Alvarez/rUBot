@@ -100,6 +100,7 @@ echo 'start_x=1' >> /boot/config.txt
 #echo 'gpu_mem=128' >> /boot/config.txt
 
 # Instalamos el modulo python de la camara.
+su -c "pip install wheel" $SUDO_USER
 su -c "pip install picamera" $SUDO_USER
 
 echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
