@@ -71,10 +71,10 @@ adduser --disabled-password --gecos "" pi
 usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
 
 # Instalamos la libreria GoPiGo.
-curl -kL dexterindustries.com/update_gopigo3 | bash
+curl -kL dexterindustries.com/update_gopigo3 | sudo -u pi bash
 
 # Instalamos los sensores.
-curl -kL dexterindustries.com/update_sensors | bash
+curl -kL dexterindustries.com/update_sensors | sudo -u pi bash
 
 echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
