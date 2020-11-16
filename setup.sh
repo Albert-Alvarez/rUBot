@@ -34,24 +34,24 @@ apt-get update
 apt-get upgrade -y
 
 # Instalamos Vim para poder editar texto por terminal.
-apt install vim -y
+# apt install vim -y
 
 # Instalamos git por si acaso...
-apt install git -y
+# apt install git -y
 
 # Instalamos tree (no se utilizara, pero lo pone en la documentacion...).
 apt install tree -y
 
 # Instalamos curl para poder hacer otras instalaciones.
-apt install curl -y
+# apt install curl -y
 
 # La documentacion recomienda reinstalar openssh.
-apt remove openssh-server -y
-apt install openssh-server -y
+# apt remove openssh-server -y
+# apt install openssh-server -y
 
 # Reiniciamos el servicio para asegurar que se apliquen los cambios.
-systemctl enable ssh
-servicer ssh restart
+# systemctl enable ssh
+# servicer ssh restart
 
 # NO se instala VNC server. No queremos que explote la Raspberry, gracias.
 # NO configuramos el HDMI puesto que no se va a utilizar.
@@ -65,6 +65,10 @@ echo -e "\e[1;32mAplicaciones instaladas con éxito.\e[0m"
 ###################################################################################################
 
 echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
+
+# Creamos el usuario pi
+adduser --disabled-password --gecos "" pi
+usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
 
 # Instalamos la libreria GoPiGo.
 curl -kL dexterindustries.com/update_gopigo3 | bash
