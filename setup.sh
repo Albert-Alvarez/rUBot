@@ -60,7 +60,7 @@ apt install python-rosdep -y
 
 rosdep init
 
-su - "$USER" -c "rosdep update"
+su -c "rosdep update" $SUDO_USER 
 
 echo -e "\e[1;32mROS Melodic instalado con éxito.\e[0m"
 
@@ -77,10 +77,10 @@ echo pi:raspberry | chpasswd
 usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
 
 # Instalamos la libreria GoPiGo.
-curl -kL dexterindustries.com/update_gopigo3 | sudo -u pi bash
+curl -kL dexterindustries.com/update_gopigo3 | sudo runuser -l pi -c bash
 
 # Instalamos los sensores.
-curl -kL dexterindustries.com/update_sensors | sudo -u pi bash
+curl -kL dexterindustries.com/update_sensors | sudo runuser -l pi -c bash
 
 echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
