@@ -75,23 +75,6 @@ curl -kL dexterindustries.com/update_sensors | bash
 echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
 ###################################################################################################
-# Configuracion de la camara.
-###################################################################################################
-
-echo -e "\e[1;33mInstalando la cámara...\e[0m"
-
-# Habilitamos el acceso a la camara.
-echo 'start_x=1' >> /boot/config.txt
-echo 'gpu_mem=128' >> /boot/config.txt
-
-# Instalamos el modulo python de la camara.
-export READTHEDOCS=True
-pip install wheel
-pip install picamera
-
-echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
-
-###################################################################################################
 # Instalamos ROS Melodic
 ###################################################################################################
 
@@ -115,6 +98,24 @@ rosdep init
 rosdep update
 
 echo -e "\e[1;32mROS Melodic instalado con éxito.\e[0m"
+
+###################################################################################################
+# Configuracion de la camara.
+###################################################################################################
+
+echo -e "\e[1;33mInstalando la cámara...\e[0m"
+
+# Habilitamos el acceso a la camara.
+echo 'start_x=1' >> /boot/config.txt
+echo 'gpu_mem=128' >> /boot/config.txt
+
+# Instalamos el modulo python de la camara.
+export READTHEDOCS=True
+pip install wheel
+pip install picamera
+
+echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
+
 
 read -p 'El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar...'
 
