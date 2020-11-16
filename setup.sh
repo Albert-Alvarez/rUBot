@@ -33,7 +33,7 @@ apt-get update
 # Actualizamos cualquier paquete que pueda estar obsoleto.
 apt-get upgrade -y
 
-apt-get install unzip -y
+apt-get install zip unzip -y
 
 echo -e "\e[1;32mAplicaciones instaladas con éxito.\e[0m"
 
