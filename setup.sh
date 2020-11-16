@@ -75,6 +75,7 @@ echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
 adduser --disabled-password --gecos "" pi
 echo pi:raspberry | chpasswd
 usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
+echo 'pi ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
 
 # Instalamos la libreria GoPiGo.
 curl -kL dexterindustries.com/update_gopigo3 | sudo runuser -l pi -c bash
@@ -99,13 +100,8 @@ echo 'start_x=1' >> /boot/config.txt
 #echo 'gpu_mem=128' >> /boot/config.txt
 
 # Instalamos el modulo python de la camara.
-#export READTHEDOCS=True
-#pip install wheel
-pip install picamera
+su -c "pip install picamera" $SUDO_USER
 
-echo -e "\e[1;32mCámara instalada con éxito.\e[0m"
-
-
-read -p "El sistema debe de reiniciarse para asegurar que los cambios sean aplicados. Pulse cualquier tecla para continuar..."
+echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
 
 reboot
