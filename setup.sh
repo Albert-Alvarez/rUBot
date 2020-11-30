@@ -4,84 +4,15 @@ echo -e "\e[0mIniciando configuración de la plataforma GoPiGo.\e[0m"
 
 
 ###################################################################################################
-# Comprobamos que haya conexion a internet.
-###################################################################################################
-
-echo -e "\e[1;33mComprobando conexión a internet...\e[0m"
-
-ping -c5 google.com > /dev/null
-
-if [ $? -ne 0 ]
-then
-        echo -e "\e[1;31mNecesitas conexion a internet para ejecutar este script...\e[0m"
-        exit 1
-fi
-
-echo -e "\e[1;32mConexión a internet disponible.\e[0m"
-
-
-###################################################################################################
-# Instalamos aplicaciones.
-###################################################################################################
-
-echo -e "\e[1;33mInstalando aplicaciones...\e[0m"
-
-
-# Actualizamos repositorios.
-apt-get update
-
-# Actualizamos cualquier paquete que pueda estar obsoleto.
-apt-get upgrade -y
-
-apt-get install zip unzip -y
-
-echo -e "\e[1;32mAplicaciones instaladas con éxito.\e[0m"
-
-
-###################################################################################################
-# Instalamos ROS Melodic
-###################################################################################################
-
-echo -e "\e[1;33mInstalando ROS Melodic...\e[0m"
-
-echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
-apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-
-apt update
-
-apt install ros-melodic-desktop -y
-
-echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
-source ~/.bashrc
-
-apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential -y
-
-apt install python-rosdep -y
-
-rosdep init
-
-su -c "rosdep update" $SUDO_USER 
-
-echo -e "\e[1;32mROS Melodic instalado con éxito.\e[0m"
-
-
-###################################################################################################
 # Instalamos drivers del robot.
 ###################################################################################################
 
 echo -e "\e[1;33mInstalando los drivers de GoPiGo...\e[0m"
 
-# Creamos el usuario pi
-adduser --disabled-password --gecos "" pi
-echo pi:raspberry | chpasswd
-usermod -a -G ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,lxd,netdev pi
-echo 'pi ALL=(ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
-
 # Instalamos la libreria GoPiGo.
-curl -kL dexterindustries.com/update_gopigo3 | sudo runuser -l pi -c bash
 
-# Instalamos los sensores.
-curl -kL dexterindustries.com/update_sensors | sudo runuser -l pi -c bash
+su - $SUDO_USER -c "curl -kL dexterindustries.com/update_gopigo3 | bash -s -- --user-local --bypass-gui-installation"
+su - $SUDO_USER -c "curl -kL dexterindustries.com/update_sensors | bash -s -- --user-local --bypass-gui-installation"
 
 echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
@@ -92,17 +23,56 @@ echo -e "\e[1;32mDrivers de GoPiGo instalados con éxito.\e[0m"
 
 echo -e "\e[1;33mInstalando la cámara...\e[0m"
 
-# Instalamos PiP.
-apt install python-pip -y
-
 # Habilitamos el acceso a la camara.
 echo 'start_x=1' >> /boot/config.txt
-#echo 'gpu_mem=128' >> /boot/config.txt
 
 # Instalamos el modulo python de la camara.
-su -c "pip install wheel" $SUDO_USER
-su -c "pip install picamera" $SUDO_USER
+su - $SUDO_USER -c "pip install picamera"
 
 echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
+
+
+###################################################################################################
+# Instalamos ROS Melodic
+###################################################################################################
+
+echo -e "\e[1;33mInstalando ROS...\e[0m"
+
+sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+apt-get update
+apt-get upgrade
+
+apt install -y python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential cmake
+
+rosdep init
+
+su - $SUDO_USER -c "bash" << EOF
+
+rosdep update
+
+mkdir -p ~/ros_catkin_ws
+cd ~/ros_catkin_ws
+
+rosinstall_generator robot --rosdistro melodic --deps --wet-only --tar > melodic-robot-wet.rosinstall
+
+wstool init -j2 src melodic-robot-wet.rosinstall
+
+rosdep install -y --from-paths src --ignore-src --rosdistro melodic -r --os=debian:buster
+
+EOF
+
+cd ~/ros_catkin_ws
+./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic -j2
+
+su - $SUDO_USER -c "echo \"source /opt/ros/melodic/setup.bash\" >> ~/.bashrc"
+
+echo -e "\e[1;32mROS instalado con éxito. Reiniciando Raspberry Pi.\e[0m"
+
+
+###################################################################################################
+# Salimos y reiniciamos
+###################################################################################################
 
 reboot
