@@ -63,7 +63,7 @@ rosdep install -y --from-paths src --ignore-src --rosdistro melodic -r --os=debi
 
 EOF
 
-cd ~/ros_catkin_ws
+cd $(eval echo ~$SUDO_USER)/ros_catkin_ws
 ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic -j2
 
 su - $SUDO_USER -c "echo \"source /opt/ros/melodic/setup.bash\" >> ~/.bashrc"
