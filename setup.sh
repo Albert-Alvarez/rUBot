@@ -31,6 +31,7 @@ su - $SUDO_USER -c "pip install picamera"
 
 # Necesario para el package raspicam.
 apt-get install -y libyaml-cpp-dev
+apt-get install -y libogg-dev libvorbis-dev libtheora-dev
 
 echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
 
