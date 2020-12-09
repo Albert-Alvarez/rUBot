@@ -42,7 +42,7 @@ sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /
 apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 
 apt install -y python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential cmake
 
