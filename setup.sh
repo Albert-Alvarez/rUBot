@@ -68,7 +68,51 @@ cd $(eval echo ~$SUDO_USER)/ros_catkin_ws
 
 su - $SUDO_USER -c "echo \"source /opt/ros/melodic/setup.bash\" >> ~/.bashrc"
 
-echo -e "\e[1;32mROS instalado con éxito. Reiniciando Raspberry Pi.\e[0m"
+echo -e "\e[1;32mROS instalado con éxito.\e[0m"
+
+
+###################################################################################################
+# Instalamos OpenCV
+###################################################################################################
+
+su - $SUDO_USER -c "mkdir ~/opencv"
+
+apt-get install -y build-essential cmake unzip pkg-config
+apt-get install -y libjpeg-dev libpng-dev libtiff-dev
+apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+apt-get install -y libxvidcore-dev libx264-dev
+apt-get install -y libgtk-3-dev
+apt-get install -y libcanberra-gtk*
+apt-get install -y libatlas-base-dev gfortran
+apt-get install -y python3-dev
+
+su - $SUDO_USER -c "bash" << EOF
+        cd ~/opencv/
+        wget -O opencv.zip https://github.com/opencv/opencv/archive/3.4.12.zip
+        unzip opencv.zip
+        wget https://bootstrap.pypa.io/get-pip.py
+        cd opencv-3.4.12
+        mkdir build
+EOF
+
+
+cd $(eval echo ~$SUDO_USER)/opencv
+python get-pip.py
+python3 get-pip.py
+
+su - $SUDO_USER -c "bash" << EOF
+        cd ~/opencv/opencv-3.4.12/build
+        cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+        make -j1
+EOF
+
+cd $(eval echo ~$SUDO_USER)/opencv/opencv-3.4.12/build
+make install
+ldconfig
+
+find /usr/local/lib -type f -name "cv2.*.so" -exec sh -c 'x="{}"; echo mv "$x" "$(dirname ${x})/cv2.so"' \;
+
+echo -e "\e[1;32mOpenCV instalado con éxito. Reiniciando Raspberry Pi.\e[0m"
 
 
 ###################################################################################################
