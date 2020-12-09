@@ -30,7 +30,7 @@ echo 'start_x=1' >> /boot/config.txt
 su - $SUDO_USER -c "pip install picamera"
 
 # Necesario para el package raspicam.
-apt-get install libyaml-cpp-dev
+apt-get install -y libyaml-cpp-dev
 
 echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
 
