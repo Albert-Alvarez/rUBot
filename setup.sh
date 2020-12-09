@@ -29,6 +29,9 @@ echo 'start_x=1' >> /boot/config.txt
 # Instalamos el modulo python de la camara.
 su - $SUDO_USER -c "pip install picamera"
 
+# Necesario para el package raspicam.
+apt-get install libyaml-cpp-dev
+
 echo -e "\e[1;32mCámara instalada con éxito. Reiniciando Raspberry Pi.\e[0m"
 
 
